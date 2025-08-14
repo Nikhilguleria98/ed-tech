@@ -48,3 +48,36 @@ export const showAllTags = async(req,res)=>{
         })
     }
 }
+
+//get tag page details
+export const getTagDetails = async(req,res)=>{
+    try {
+        //get id
+        const {tagId} = req.body
+        //get courses for specified tagId
+        const selectedTag = await Tag.findById(tagId).populate("courses").exec()
+        if(!selectedTag){
+            return res.status(400).json({
+                success:false,
+                message:"Data not found"
+            })
+        }
+
+        //get courses for different categories
+        const differentTags = await Tag.find({_id:{$ne:tagId}}).populate("courses").exec()
+
+        return res.status(200).json({
+            success:true,
+            data:{
+                selectedTag,
+                differentTags
+            }
+        })
+        
+    } catch (error) {
+        return res.status(500).json({
+            success:false,
+            message:error.message
+        })
+    }
+}
