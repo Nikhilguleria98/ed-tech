@@ -1,78 +1,86 @@
 import User from "../models/User.js";
 import Tag from "../models/Tag.js";
-import { uploadFileToCloudinary } from "../utils/imageUploader";
+import { uploadFileToCloudinary } from "../utils/imageUploader.js";
 import Course from "../models/Course.js";
+
+
 
 export const createCourse = async (req, res) => {
   try {
-    const { courseName, courseDescription, whatYouWillLearn, price, tag } =
-      req.body;
+    const {
+      courseName,
+      courseDescription,
+      whatYouWillLearn,
+      price,
+      tag,
+    } = req.body;
 
-    //get thumbnail
-    const thumbnail = req.files.thumbnail;
-
-    if (
-      !courseName ||
-      !courseDescription ||
-      !whatYouWillLearn ||
-      !price ||
-      !tag
-    ) {
+    // ✅ Validation
+    if (!courseName || !courseDescription || !whatYouWillLearn || !price || !tag) {
       return res.status(400).json({
         success: false,
         message: "All fields are required",
       });
     }
 
-    //check for instructor
-    const userID = req.user.id;
-    const instructorDetails = await User.findById(userID);
-
-    console.log("Instructor details", instructorDetails);
-    if (!instructorDetails) {
+    // ✅ Thumbnail check
+    if (!req.files || !req.files.thumbnail) {
       return res.status(400).json({
         success: false,
-        message: "Instructor details not found",
+        message: "Thumbnail is required",
       });
     }
 
-    //check given tag is valid or not
-    const tagsDetails = await Tag.findById(tag);
+    const thumbnail = req.files.thumbnail;
 
-    //uplaod image to cloudinary
+    // ✅ Instructor
+    const userID = req.user.id;
+    const instructor = await User.findById(userID);
+
+    if (!instructor) {
+      return res.status(400).json({
+        success: false,
+        message: "Instructor not found",
+      });
+    }
+
+    // ✅ Tag check
+    const tagDetails = await Tag.findById(tag);
+    if (!tagDetails) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid Tag",
+      });
+    }
+
+    // ✅ Upload image
     const thumbnailImage = await uploadFileToCloudinary(
       thumbnail,
       process.env.FOLDER_NAME
     );
 
-    //create an entry for new course
+    // ✅ Create course
     const newCourse = await Course.create({
       courseName,
       courseDescription,
-      instructor: instructorDetails._id,
-      whatYouWillLearn: whatYouWillLearn,
+      instructor: instructor._id,
+      whatYouWillLearn,
       price,
-      tag: tagsDetails._id,
+      tag: tagDetails._id,
       thumbnail: thumbnailImage.secure_url,
     });
 
-    //add the new course to user schema of instructor
-    await User.findByIdAndUpdate(
-      { _id: instructorDetails._id },
-      {
-        $push: {
-          courses: newCourse._id,
-        },
-      },
-      { new: true }
-    );
+    // ✅ Add to instructor
+    await User.findByIdAndUpdate(instructor._id, {
+      $push: { courses: newCourse._id },
+    });
 
-    //return response
     return res.status(200).json({
       success: true,
       message: "Course created successfully",
       data: newCourse,
     });
+
   } catch (error) {
     console.log(error);
     return res.status(500).json({
@@ -89,6 +97,7 @@ export const showAllCourses = async (req, res) => {
     const allCourses = await Course.find({},
                                          {
                                          courseName: true,
+                                         courseDescription:true,
                                          price: true,
                                          thumbnail: true,
                                          instructor: true,
@@ -163,3 +172,76 @@ export const getCourseDetails = async(req,res)=>{
     })
   }
 }
+
+
+// UPDATE COURSE
+export const updateCourse = async (req, res) => {
+  try {
+    const { courseId, courseName, courseDescription, price, tag, whatYouWillLearn } = req.body;
+
+    const course = await Course.findById(courseId);
+
+    if (!course) {
+      return res.status(404).json({
+        success: false,
+        message: "Course not found",
+      });
+    }
+
+    // ✅ update text fields
+    if (courseName) course.courseName = courseName;
+    if (courseDescription) course.courseDescription = courseDescription;
+    if (price) course.price = price;
+    if (whatYouWillLearn) course.whatYouWillLearn = whatYouWillLearn;
+
+    if (tag) course.tag = tag;
+
+    // 🔥 FIX: thumbnail update
+    if (req.files && req.files.thumbnail) {
+      const thumbnail = req.files.thumbnail;
+
+      const uploaded = await uploadFileToCloudinary(
+        thumbnail,
+        process.env.FOLDER_NAME
+      );
+
+      course.thumbnail = uploaded.secure_url;
+    }
+
+    await course.save();
+
+    return res.status(200).json({
+      success: true,
+      message: "Course updated successfully",
+      data: course,
+    });
+
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+
+// DELETE COURSE
+export const deleteCourse = async (req, res) => {
+  try {
+    const { courseId } = req.body;
+
+    await Course.findByIdAndDelete(courseId);
+
+    return res.status(200).json({
+      success: true,
+      message: "Course deleted successfully",
+    });
+
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: "Failed to delete course",
+    });
+  }
+};

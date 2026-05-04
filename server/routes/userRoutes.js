@@ -5,7 +5,7 @@ const router = express.Router()
 
 router.post('/signup', signUp);
 router.post('/login', login);
-router.post('/sendOtp', sendOTP);
+router.post('/send-otp', sendOTP);
 
 // //student
 // router.get('/students', auth, isStudent, (req, res) => {

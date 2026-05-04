@@ -1,92 +1,33 @@
-import jwt from 'jsonwebtoken'
+import jwt from "jsonwebtoken";
 
-export const auth = async(req,res,next)=>{
-    try {
+export const auth = async (req, res, next) => {
+  try {
+    // ✅ correct header
+    const authHeader = req.headers.authorization;
 
-        //extract token
-        const token = req.body.token || req.cookies.token || req.header("Authorisation").replace("Bearer ","")
-
-        //check token missing
-        if(!token){
-            return res.status(401).json({
-                success:false,
-                message:"Token missing"
-            })
-        }
-        
-        //verify token
-        try {
-            
-             const decode = jwt.verify(token,process.env.JWT_SECRET)
-             console.log(decode)
-             req.user = decode
-            
-        } catch (error) {
-            return res.status(401).json({
-                success:false,
-                message:"Token is invalid"
-            })
-        }
-        next()
-    } catch (error) {
-             return res.status(401).json({
-                success:false,
-                message:"Something went wrong while validating token"
-            })
+    // check token
+    if (!authHeader || !authHeader.startsWith("Bearer ")) {
+      return res.status(401).json({
+        success: false,
+        message: "Token missing or malformed",
+      });
     }
-}
 
-//isStudent
+    // extract token
+    const token = authHeader.split(" ")[1];
 
-export const isStudent =async(req,res)=>{
-    try {
-        if(req.user.accountType !== "Student"){
-            return res.status(401).json({
-                success:false,
-                message:"This is protected route for students only"
-            })
-        }
-        
-    } catch (error) {
-              return res.status(500).json({
-                success:false,
-                message:"User role cannot be verified, please try again"
-            })
-    }
-}
+    // verify
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
-//isInstructor
-export const isInstructor =async(req,res)=>{
-    try {
-        if(req.user.accountType !== "Instructor"){
-            return res.status(401).json({
-                success:false,
-                message:"This is protected route for Instructor only"
-            })
-        }
-        
-    } catch (error) {
-              return res.status(500).json({
-                success:false,
-                message:"User role cannot be verified, please try again"
-            })
-    }
-}
+    req.user = decoded;
 
-//isAdmin
-export const isAdmin =async(req,res)=>{
-    try {                                         
-        if(req.user.accountType !== "Admin"){
-            return res.status(401).json({
-                success:false,
-                message:"This is protected route for Admin only"
-            })
-        }
-        
-    } catch (error) {
-              return res.status(500).json({
-                success:false,
-                message:"User role cannot be verified, please try again"
-            })
-    }
-}
+    next();
+  } catch (error) {
+    console.log("JWT ERROR:", error.message);
+
+    return res.status(401).json({
+      success: false,
+      message: "Invalid or expired token",
+    });
+  }
+};

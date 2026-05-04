@@ -1,43 +1,47 @@
 import express from 'express'
 import dotenv from 'dotenv'
 import connectDB from './config/db.js'
-dotenv.config()
 import cookieParser from "cookie-parser"
 import cors from 'cors'
 import fileUpload from 'express-fileupload' 
 import { cloudinaryConnect } from './config/cloudinary.js'
 import userRoutes from './routes/userRoutes.js'
+import courseRoutes from './routes/coursesRoutes.js'
+import tagRoutes from './routes/tagRoutes.js'
+
+dotenv.config()
 
 const app = express()
 
 //middlewares
 app.use(express.json())
-app.use(
-    cors({
-        origin:"http://localhost:3000",
-        credentials:true
-    })
-)
-app.use(
-    fileUpload({
-        useTempFiles:true,
-        tempFileDir:"/tmp"
-    })
-)
+app.use(cookieParser())
 
-//port
-const PORT = process.env.PORT
+app.use(cors({
+    origin:"http://localhost:3000",
+    credentials:true
+}))
 
-//routes
-app.use("/",userRoutes)
+app.use(fileUpload({
+    useTempFiles:true,
+    tempFileDir:"/tmp"
+}))
+
+//routes 
+app.use("/", userRoutes)
+app.use("/course",courseRoutes)
+app.use("/tag", tagRoutes);
+
 
 //database
 connectDB()
 
-//cloudinary
-cloudinaryConnect
-//server
+//cloudinary 
+cloudinaryConnect()
+
+//port
+const PORT = process.env.PORT || 5000
+
 app.listen(PORT,()=>{
     console.log(`server running on port ${PORT}`)
 })
-

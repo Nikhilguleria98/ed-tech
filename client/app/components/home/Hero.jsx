@@ -1,30 +1,46 @@
 const HeroSection = () => {
   return (
-    <div className="bg-gradient-to-r from-blue-600 to-purple-600 text-white py-20 px-6">
-      <div className="max-w-6xl mx-auto grid md:grid-cols-2 items-center gap-10">
-        
-        <div>
-          <h1 className="text-4xl md:text-5xl font-bold leading-tight">
-            Learn Skills That Shape Your Future 🚀
-          </h1>
-          <p className="mt-4 text-lg text-gray-200">
-            Join thousands of learners and master in-demand skills with top instructors.
-          </p>
+    <div className="relative h-screen w-full flex items-center justify-center text-white">
 
-          <div className="mt-6 flex gap-4">
-            <button className="bg-white text-blue-600 px-6 py-3 rounded font-semibold">
-              Explore Courses
-            </button>
-            <button className="border border-white px-6 py-3 rounded">
-              Become Instructor
-            </button>
-          </div>
+      {/* Background Image */}
+      <img
+        src="coding bg2.jpg"
+        alt="hero"
+        className="absolute inset-0 w-full h-full object-cover"
+      />
+
+      {/* Dark Overlay */}
+      <div className="absolute inset-0 bg-black/80 "></div>
+
+      {/* Content */}
+      <div className="relative z-10 text-center max-w-3xl px-6">
+
+        {/* Top Button */}
+        <button className="mb-6 px-5 py-2 rounded-full bg-white/10 border border-white/20 backdrop-blur-md hover:bg-white/20 transition">
+          Become an Instructor →
+        </button>
+
+        {/* Heading */}
+        <h1 className="text-4xl md:text-6xl font-bold leading-tight">
+          Empower Your Future with{" "}
+          <span className="text-cyan-400">Coding Skills</span>
+        </h1>
+
+        {/* Description */}
+        <p className="mt-6 text-gray-300 text-lg">
+          Learn at your own pace from anywhere with hands-on projects,
+          quizzes, and expert guidance.
+        </p>
+
+        {/* Buttons */}
+        <div className="mt-8 flex justify-center gap-4">
+          <button className="bg-yellow-400 text-black px-6 py-3 rounded-lg font-semibold hover:bg-yellow-300 transition">
+            Learn More
+          </button>
+          <button className="bg-white/10 border border-white/20 px-6 py-3 rounded-lg backdrop-blur-md hover:bg-white/20 transition">
+            Book a Demo
+          </button>
         </div>
-
-        <img
-          src="https://imgs.search.brave.com/dj91cach-s8oA4soLiySiRlK4b7FPCKde97Zm5XH1is/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9zdGF0/aWMudmVjdGVlenku/Y29tL3N5c3RlbS9y/ZXNvdXJjZXMvdGh1/bWJuYWlscy8wNjkv/NzAwLzU0NC9zbWFs/bC9vcGVuLWJvb2st/d2l0aC1nbG93aW5n/LWxpZ2h0YnVsYi1h/bmQtZ3JhZHVhdGlv/bi1jYXAtc3ltYm9s/aXppbmctZWR1Y2F0/aW9uLWFuZC1pZGVh/cy1mcmVlLXBob3Rv/LmpwZw"
-          className="rounded-xl shadow-lg"
-        />
       </div>
     </div>
   );

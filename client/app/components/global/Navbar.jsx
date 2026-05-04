@@ -82,7 +82,8 @@ const Navbar = () => {
       {/* Mobile Menu */}
       {open && (
         <div className="md:hidden bg-white/10 backdrop-blur-lg px-6 pb-4 flex flex-col gap-3">
-          <Link href="/" className={navLink("/")}>
+         <div className="mt-2 flex flex-col">
+           <Link href="/" className={navLink("/")}>
             Home
           </Link>
           <Link href="/courses" className={navLink("/courses")}>
@@ -91,6 +92,7 @@ const Navbar = () => {
           <Link href="/dashboard" className={navLink("/dashboard")}>
             Dashboard
           </Link>
+         </div>
 
           {!token ? (
             <>

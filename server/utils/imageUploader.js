@@ -1,16 +1,21 @@
-import {v2 as cloudinary} from "cloudinary"
+import { v2 as cloudinary } from "cloudinary";
 
-export const uploadFileToCloudinary = async(File,folder,height,quality)=>{
-    const {options} = folder
+export const uploadFileToCloudinary = async (file, folder) => {
+  try {
+    const options = {
+      folder: folder,
+      resource_type: "auto",
+    };
 
-    if(height){
-        options.height = height
-    }
-    if(quality){
-        options.quality = quality
+    const result = await cloudinary.uploader.upload(
+      file.tempFilePath,
+      options
+    );
 
-        options.resource_type = "auto"
+    return result; // ✅ VERY IMPORTANT
 
-        await cloudinary.uploader.upload(File.tempFilePath,options)
-    }
-}
+  } catch (error) {
+    console.log("Cloudinary Upload Error:", error);
+    throw error;
+  }
+};

@@ -1,4 +1,3 @@
-import { request } from "express";
 import mongoose from "mongoose";
 import mailSender from "../utils/mailSender.js";
 
@@ -13,26 +12,30 @@ const otpSchema = new mongoose.Schema({
   },
   createdAt: {
     type: Date,
-    default: Date.now(),
-    expires: 5 * 60,
+    default: Date.now,
+    expires: 10 * 60, // ✅ 10 minutes (increase for better UX)
   },
 });
 
-async function sendVerificationEmail(email,otp){
-    try {
-
-        const mailResponse = await mailSender(email,"Verification email from Nikhil Guleria",otp)
-        console.log("Email sent successfully",mailResponse)
-        
-    } catch (error) {
-        console.log("error occured while sending the email",error)
-    }
+// 🔐 Send email after OTP save
+async function sendVerificationEmail(email, otp) {
+  try {
+    const mailResponse = await mailSender(
+      email,
+      "Verification email from Nikhil Guleria",
+      `Your OTP is: ${otp}`
+    );
+    console.log("Email sent successfully", mailResponse);
+  } catch (error) {
+    console.log("Error sending email:", error);
+  }
 }
 
-otpSchema.pre('save',async function(next){
-    await sendVerificationEmail(this.email,this.otp)
-    next()
-})
+// 🔁 Pre-save hook
+otpSchema.pre("save", async function (next) {
+  await sendVerificationEmail(this.email, this.otp);
+  next();
+});
 
 const OTP = mongoose.model("OTP", otpSchema);
 export default OTP;

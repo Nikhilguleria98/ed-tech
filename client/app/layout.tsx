@@ -4,8 +4,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import Navbar from './components/global/Navbar'
-import { Provider } from "react-redux";
-import {store} from './store'
+import Providers from './provider'
 import InitAuth from './InitAuth'
 
 const geistSans = Geist({
@@ -34,12 +33,12 @@ export default function RootLayout({
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">
-        <Navbar/>
-        <Provider store={store}>
+        <Providers>
           <InitAuth>
-        {children}
+            <Navbar />
+            {children}
           </InitAuth>
-        </Provider>
+        </Providers>
         
         </body>
     </html>
