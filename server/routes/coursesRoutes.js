@@ -1,24 +1,29 @@
-import { 
-  createCourse, 
-  showAllCourses, 
+import express from "express";
+import {
+  createCourse,
+  showAllCourses,
   getCourseDetails,
   updateCourse,
   deleteCourse,
-  
 } from "../controllers/Course.js";
-import express from 'express'
 
 import { auth } from "../middleware/auth.js";
 
-const router = express.Router()
+const router = express.Router();
 
+// ✅ CREATE
 router.post("/create", auth, createCourse);
+
+// ✅ GET ALL
 router.get("/all", showAllCourses);
-router.post("/details", getCourseDetails);
 
-// NEW
-router.put("/update", auth, updateCourse);
-router.delete("/delete", auth, deleteCourse);
+// ✅ GET SINGLE (FIXED 🔥)
+router.get("/:id", getCourseDetails);
 
+// ✅ UPDATE
+router.put("/:id", auth, updateCourse);
 
-export default router
+// ✅ DELETE
+router.delete("/:id", auth, deleteCourse);
+
+export default router;
