@@ -8,6 +8,8 @@ import { cloudinaryConnect } from './config/cloudinary.js'
 import userRoutes from './routes/userRoutes.js'
 import courseRoutes from './routes/coursesRoutes.js'
 import tagRoutes from './routes/tagRoutes.js'
+import sectionRoutes from './routes/sectionRoutes.js'
+import ratingRoutes from './routes/ratingRoutes.js'
 
 dotenv.config()
 
@@ -31,6 +33,8 @@ app.use(fileUpload({
 app.use("/", userRoutes)
 app.use("/course",courseRoutes)
 app.use("/tag", tagRoutes);
+app.use("/section", sectionRoutes);
+app.use("/rating", ratingRoutes);
 
 
 //database

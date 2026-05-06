@@ -6,7 +6,10 @@ export default function Dashboard() {
   const router = useRouter();
 
   useEffect(() => {
-    const user = JSON.parse(localStorage.getItem("user"));
+    const storedUser = localStorage.getItem("user");
+    const user = storedUser && storedUser !== "undefined"
+      ? JSON.parse(storedUser)
+      : null;
 
     if (!user) {
       router.push("/login");

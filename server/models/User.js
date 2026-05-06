@@ -1,4 +1,3 @@
-import { request } from "express";
 import mongoose from "mongoose";
 
 const userSchema = new mongoose.Schema({
@@ -51,7 +50,7 @@ const userSchema = new mongoose.Schema({
     courseProgress:[
         {
         type:mongoose.Schema.Types.ObjectId,
-        ref:"courseProgress"   
+        ref:"CourseProgress"
         }
     ]
 })

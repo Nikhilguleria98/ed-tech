@@ -12,19 +12,27 @@ export default function StudentDashboard() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetchDashboard();
-  }, []);
+    let ignore = false;
 
-  const fetchDashboard = async () => {
-    try {
-      const res = await api.get("/student/dashboard");
-      setStats(res.data.data);
-    } catch (err) {
-      console.log(err);
-    } finally {
-      setLoading(false);
-    }
-  };
+    api.get("/student/dashboard")
+      .then((res) => {
+        if (!ignore) {
+          setStats(res.data.data);
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      })
+      .finally(() => {
+        if (!ignore) {
+          setLoading(false);
+        }
+      });
+
+    return () => {
+      ignore = true;
+    };
+  }, []);
 
   if (loading) {
     return <p className="text-white">Loading dashboard...</p>;

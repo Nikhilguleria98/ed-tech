@@ -1,8 +1,10 @@
 'use client'
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import api from "../../../services/api";
 
 export default function AddCourse() {
+  const router = useRouter();
   const [form, setForm] = useState({
     courseName: "",
     courseDescription: "",
@@ -66,6 +68,7 @@ export default function AddCourse() {
         thumbnail: null,
       });
       setPreview(null);
+      router.push("/dashboard/instructor/courses");
 
     } catch (err) {
       console.log(err.response?.data);

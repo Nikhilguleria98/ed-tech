@@ -1,4 +1,3 @@
- import { request } from "express";
 import mongoose from "mongoose";
  
  const tagSchema = new mongoose.Schema({
@@ -10,10 +9,12 @@ import mongoose from "mongoose";
    description:{
     type:String
    },
-   course:{
-    type:mongoose.Schema.Types.ObjectId,
-    ref:"Course"
-   }
+   courses:[
+    {
+     type:mongoose.Schema.Types.ObjectId,
+     ref:"Course"
+    }
+   ]
  
 
  

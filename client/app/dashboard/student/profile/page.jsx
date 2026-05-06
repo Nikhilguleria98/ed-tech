@@ -20,30 +20,35 @@ export default function Profile() {
   const [editMode, setEditMode] = useState(false);
 
   useEffect(() => {
-    fetchUser();
-  }, []);
+    let ignore = false;
 
-  const fetchUser = async () => {
-    try {
-      const res = await api.get("/user/me");
-      const user = res.data.data;
+    api.get("/user/me")
+      .then((res) => {
+        if (!ignore) {
+          const user = res.data.data;
 
-      setForm({
-        firstName: user.firstName,
-        lastName: user.lastName,
-        email: user.email,
-        dateOfBirth: user.additionalDetails?.dateOfBirth || "",
-        contactNumber: user.additionalDetails?.contactNumber || "",
-        about: user.additionalDetails?.about || "",
-        gender: user.additionalDetails?.gender || "",
+          setForm({
+            firstName: user.firstName,
+            lastName: user.lastName,
+            email: user.email,
+            dateOfBirth: user.additionalDetails?.dateOfBirth || "",
+            contactNumber: user.additionalDetails?.contactNumber || "",
+            about: user.additionalDetails?.about || "",
+            gender: user.additionalDetails?.gender || "",
+          });
+
+          setPreview(user.image);
+          localStorage.setItem("user", JSON.stringify(user));
+        }
+      })
+      .catch((err) => {
+        console.log(err);
       });
 
-      setPreview(user.image);
-      localStorage.setItem("user", JSON.stringify(user));
-    } catch (err) {
-      console.log(err);
-    }
-  };
+    return () => {
+      ignore = true;
+    };
+  }, []);
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });

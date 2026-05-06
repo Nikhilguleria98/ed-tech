@@ -6,15 +6,42 @@ export default function MyCourses() {
   const [courses, setCourses] = useState([]);
 
   useEffect(() => {
-    fetchMyCourses();
+    let ignore = false;
+
+    api.get("/user/my-courses")
+      .then((res) => {
+        if (!ignore) {
+          setCourses(res.data.data);
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+
+    return () => {
+      ignore = true;
+    };
   }, []);
 
-  const fetchMyCourses = async () => {
+  const handleComplete = async (courseId) => {
     try {
-      const res = await api.get("/user/my-courses");
-      setCourses(res.data.data);
+      await api.put(`/course/${courseId}/complete`);
+      setCourses((prev) =>
+        prev.map((course) =>
+          course._id === courseId
+            ? {
+                ...course,
+                progress: {
+                  ...(course.progress || {}),
+                  progressPercentage: 100,
+                  completed: true,
+                },
+              }
+            : course
+        )
+      );
     } catch (err) {
-      console.log(err);
+      console.log(err.response?.data || err);
     }
   };
 
@@ -41,6 +68,32 @@ export default function MyCourses() {
                 <p className="text-sm text-gray-400 mt-1 line-clamp-2">
                   {course.courseDescription}
                 </p>
+
+                <div className="mt-4">
+                  <div className="flex items-center justify-between text-xs text-gray-400 mb-2">
+                    <span>Progress</span>
+                    <span>{course.progress?.progressPercentage || 0}%</span>
+                  </div>
+                  <div className="h-2 rounded-full bg-white/10 overflow-hidden">
+                    <div
+                      className="h-full bg-green-500"
+                      style={{ width: `${course.progress?.progressPercentage || 0}%` }}
+                    />
+                  </div>
+                </div>
+
+                {course.progress?.completed ? (
+                  <p className="mt-4 rounded-lg bg-green-500/10 px-3 py-2 text-sm text-green-400">
+                    Completed
+                  </p>
+                ) : (
+                  <button
+                    onClick={() => handleComplete(course._id)}
+                    className="mt-4 w-full rounded-lg bg-indigo-500 py-2 text-sm font-medium hover:bg-indigo-600"
+                  >
+                    Mark as Complete
+                  </button>
+                )}
               </div>
             </div>
           ))}

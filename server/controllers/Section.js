@@ -1,5 +1,6 @@
 import Section from '../models/Section.js'
 import Course from '../models/Course.js'
+import SubSection from '../models/SubSection.js'
 
 export const createSection = async(req,res)=>{
     try {
@@ -85,8 +86,20 @@ export const  deleteSection = async(req,res)=>{
         //get id
         const {sectionId} = req.params
 
-        //use findByIdAndDelete
-        await Section.findByIdAndUpdate(sectionId);
+        const section = await Section.findById(sectionId)
+        if(!section){
+            return res.status(404).json({
+                success:false,
+                message:"Section not found"
+            })
+        }
+
+        await Course.updateMany(
+            { courseContent: sectionId },
+            { $pull: { courseContent: sectionId } }
+        );
+        await SubSection.deleteMany({ _id: { $in: section.subSection || [] } });
+        await Section.findByIdAndDelete(sectionId);
 
         return res.status(200).json({
             success:true,
@@ -94,6 +107,10 @@ export const  deleteSection = async(req,res)=>{
         })
         
     } catch (error) {
-        
+        return res.status(500).json({
+            success:false,
+            message:"Unable to delete section",
+            error:error.message
+        })
     }
 }

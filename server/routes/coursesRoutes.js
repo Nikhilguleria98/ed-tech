@@ -5,7 +5,10 @@ import {
   getCourseDetails,
   updateCourse,
   deleteCourse,
+  getInstructorDashboard,
   getInstructorCourses,
+  markCourseCompleted,
+  purchaseCourse,
 } from "../controllers/Course.js";
 
 import { auth } from "../middleware/auth.js";
@@ -16,7 +19,10 @@ router.post("/create", auth, createCourse);
 router.get("/all", showAllCourses);
 
 // ✅ IMPORTANT ORDER
+router.get("/instructor-dashboard", auth, getInstructorDashboard);
 router.get("/instructor-courses", auth, getInstructorCourses);
+router.post("/purchase", auth, purchaseCourse);
+router.put("/:courseId/complete", auth, markCourseCompleted);
 
 router.get("/:id", getCourseDetails);
 router.put("/:id", auth, updateCourse);

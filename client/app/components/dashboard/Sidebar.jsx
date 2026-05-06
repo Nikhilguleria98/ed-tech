@@ -1,15 +1,28 @@
 'use client'
-import { useRouter, usePathname } from "next/navigation";
+
+import { useState } from "react";
+import { usePathname, useRouter } from "next/navigation";
 
 export default function Sidebar() {
   const router = useRouter();
   const pathname = usePathname();
+  const [user] = useState(() => {
+    if (typeof window === "undefined") {
+      return null;
+    }
 
-  // ✅ FIXED
-  const storedUser = localStorage.getItem("user");
-  const user = storedUser && storedUser !== "undefined"
-    ? JSON.parse(storedUser)
-    : null;
+    const storedUser = localStorage.getItem("user");
+    if (!storedUser || storedUser === "undefined") {
+      return null;
+    }
+
+    try {
+      return JSON.parse(storedUser);
+    } catch (error) {
+      console.log(error);
+      return null;
+    }
+  });
 
   const isInstructor = user?.accountType === "Instructor";
 
@@ -29,10 +42,8 @@ export default function Sidebar() {
 
   return (
     <div className="w-64 bg-white/5 border-r border-white/10 p-5 flex flex-col justify-between">
-
-      {/* TOP */}
       <div className="mt-14">
-        <h1 className="text-xl font-bold mb-8">🎓 EduDash</h1>
+        <h1 className="text-xl font-bold mb-8">EduDash</h1>
 
         <div className="space-y-2">
           {menu.map((item) => (
@@ -40,9 +51,7 @@ export default function Sidebar() {
               key={item.path}
               onClick={() => router.push(item.path)}
               className={`p-3 rounded-lg cursor-pointer transition ${
-                pathname === item.path
-                  ? "bg-indigo-500"
-                  : "hover:bg-white/10"
+                pathname === item.path ? "bg-indigo-500" : "hover:bg-white/10"
               }`}
             >
               {item.name}
@@ -51,7 +60,6 @@ export default function Sidebar() {
         </div>
       </div>
 
-      {/* BOTTOM */}
       <button
         onClick={() => {
           localStorage.clear();

@@ -1,4 +1,4 @@
-import Section from "../models/Section";
+import Section from "../models/Section.js";
 import SubSection from "../models/SubSection.js";
 import { uploadFileToCloudinary } from "../utils/imageUploader.js";
 
@@ -8,10 +8,10 @@ export const createSubSection = async(req,res)=>{
         //fetch data
         const {sectionId,title,timeDuration,description} = req.body;
         //extract video file
-        const video = req.files.videoFile
+        const video = req.files?.videoFile
 
         //validation
-        if(!sectionId ||!title ||!timeDuration ||!description){
+        if(!sectionId ||!title ||!timeDuration ||!description || !video){
             return res.status(200).json({
                 success:false,
                 message:"All fields are required"
@@ -40,7 +40,8 @@ export const createSubSection = async(req,res)=>{
         //return response
         return res.status(200).json({
             success:true,
-            message:"Sub-Section created successfully"
+            message:"Sub-Section created successfully",
+            data: updatedSection
         })
     } catch (error) {
         console.log(error)
