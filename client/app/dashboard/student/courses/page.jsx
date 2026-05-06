@@ -19,7 +19,7 @@ export default function MyCourses() {
   };
 
   return (
-    <div className="min-h-screen bg-[#0f172a] text-white p-6">
+    <div className="min-h-screen bg-[#0f172a] text-white p-6 mt-10">
       <h1 className="text-2xl mb-6 font-bold">My Purchased Courses</h1>
 
       {courses.length === 0 ? (

@@ -5,25 +5,21 @@ import {
   getCourseDetails,
   updateCourse,
   deleteCourse,
+  getInstructorCourses,
 } from "../controllers/Course.js";
 
 import { auth } from "../middleware/auth.js";
 
 const router = express.Router();
 
-// ✅ CREATE
 router.post("/create", auth, createCourse);
-
-// ✅ GET ALL
 router.get("/all", showAllCourses);
 
-// ✅ GET SINGLE (FIXED 🔥)
+// ✅ IMPORTANT ORDER
+router.get("/instructor-courses", auth, getInstructorCourses);
+
 router.get("/:id", getCourseDetails);
-
-// ✅ UPDATE
 router.put("/:id", auth, updateCourse);
-
-// ✅ DELETE
 router.delete("/:id", auth, deleteCourse);
 
 export default router;

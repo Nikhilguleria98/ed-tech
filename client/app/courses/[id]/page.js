@@ -29,7 +29,7 @@ export default function CourseDetails() {
 
   const handleBuy = async () => {
     try {
-      await api.post("/course/purchase", { courseId: id });
+      await api.post("/purchase", { courseId: id });
       alert("Course purchased successfully 🎉");
     } catch (err) {
       console.log(err.response?.data);

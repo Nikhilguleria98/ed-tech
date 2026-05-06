@@ -4,7 +4,12 @@ import { useRouter, usePathname } from "next/navigation";
 export default function Sidebar() {
   const router = useRouter();
   const pathname = usePathname();
-  const user = JSON.parse(localStorage.getItem("user"));
+
+  // ✅ FIXED
+  const storedUser = localStorage.getItem("user");
+  const user = storedUser && storedUser !== "undefined"
+    ? JSON.parse(storedUser)
+    : null;
 
   const isInstructor = user?.accountType === "Instructor";
 
@@ -26,7 +31,7 @@ export default function Sidebar() {
     <div className="w-64 bg-white/5 border-r border-white/10 p-5 flex flex-col justify-between">
 
       {/* TOP */}
-      <div>
+      <div className="mt-14">
         <h1 className="text-xl font-bold mb-8">🎓 EduDash</h1>
 
         <div className="space-y-2">

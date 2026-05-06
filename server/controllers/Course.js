@@ -1,54 +1,27 @@
 import User from "../models/User.js";
 import Tag from "../models/Tag.js";
-import { uploadFileToCloudinary } from "../utils/imageUploader.js";
 import Course from "../models/Course.js";
-
+import courseProgress from "../models/courseProgress.js";
+import { uploadFileToCloudinary } from "../utils/imageUploader.js";
 
 // ✅ CREATE COURSE
 export const createCourse = async (req, res) => {
   try {
-    const {
-      courseName,
-      courseDescription,
-      whatYouWillLearn,
-      price,
-      tag,
-    } = req.body;
+    const { courseName, courseDescription, whatYouWillLearn, price, tag } = req.body;
 
     if (!courseName || !courseDescription || !whatYouWillLearn || !price || !tag) {
-      return res.status(400).json({
-        success: false,
-        message: "All fields are required",
-      });
+      return res.status(400).json({ success: false, message: "All fields are required" });
     }
 
     if (!req.files || !req.files.thumbnail) {
-      return res.status(400).json({
-        success: false,
-        message: "Thumbnail is required",
-      });
+      return res.status(400).json({ success: false, message: "Thumbnail is required" });
     }
-
-    const thumbnail = req.files.thumbnail;
 
     const instructor = await User.findById(req.user.id);
-    if (!instructor) {
-      return res.status(400).json({
-        success: false,
-        message: "Instructor not found",
-      });
-    }
-
     const tagDetails = await Tag.findById(tag);
-    if (!tagDetails) {
-      return res.status(400).json({
-        success: false,
-        message: "Invalid Tag",
-      });
-    }
 
     const uploadedThumbnail = await uploadFileToCloudinary(
-      thumbnail,
+      req.files.thumbnail,
       process.env.FOLDER_NAME
     );
 
@@ -60,107 +33,63 @@ export const createCourse = async (req, res) => {
       price,
       tag: tagDetails._id,
       thumbnail: uploadedThumbnail.secure_url,
+      studentsEnrolled: [],
     });
 
     await User.findByIdAndUpdate(instructor._id, {
       $push: { courses: newCourse._id },
     });
 
-    return res.status(200).json({
-      success: true,
-      message: "Course created successfully",
-      data: newCourse,
-    });
+    res.json({ success: true, data: newCourse });
 
   } catch (error) {
-    return res.status(500).json({
-      success: false,
-      message: error.message,
-    });
+    res.status(500).json({ success: false, message: error.message });
   }
 };
-
 
 // ✅ GET ALL COURSES
 export const showAllCourses = async (req, res) => {
   try {
-    const allCourses = await Course.find({}, {
-      courseName: true,
-      courseDescription: true,
-      price: true,
-      thumbnail: true,
-      instructor: true,
-    })
+    const courses = await Course.find()
       .populate("instructor")
       .exec();
 
-    return res.status(200).json({
-      success: true,
-      data: allCourses,
-    });
+    res.json({ success: true, data: courses });
 
   } catch (error) {
-    return res.status(500).json({
-      success: false,
-      message: error.message,
-    });
+    res.status(500).json({ success: false, message: error.message });
   }
 };
 
-
-// ✅ GET SINGLE COURSE (FIXED 🔥)
+// ✅ GET SINGLE COURSE
 export const getCourseDetails = async (req, res) => {
   try {
-    const courseId = req.params.id;
-
-    const course = await Course.findById(courseId)
-      .populate("instructor")
-      .populate("tag");
+    const course = await Course.findById(req.params.id)
+      .populate("instructor");
 
     if (!course) {
-      return res.status(404).json({
-        success: false,
-        message: "Course not found",
-      });
+      return res.status(404).json({ success: false, message: "Course not found" });
     }
 
-    return res.status(200).json({
-      success: true,
-      data: course,
-    });
+    res.json({ success: true, data: course });
 
   } catch (error) {
-    console.log("ERROR:", error); // 🔥 VERY IMPORTANT
-    return res.status(500).json({
-      success: false,
-      message: error.message,
-    });
+    res.status(500).json({ success: false, message: error.message });
   }
 };
-
 
 // ✅ UPDATE COURSE
 export const updateCourse = async (req, res) => {
   try {
-    const courseId = req.params.id;
+    const course = await Course.findById(req.params.id);
 
-    const course = await Course.findById(courseId);
     if (!course) {
-      return res.status(404).json({
-        success: false,
-        message: "Course not found",
-      });
+      return res.status(404).json({ success: false, message: "Course not found" });
     }
 
-    const { courseName, courseDescription, price, tag, whatYouWillLearn } = req.body;
+    Object.assign(course, req.body);
 
-    if (courseName) course.courseName = courseName;
-    if (courseDescription) course.courseDescription = courseDescription;
-    if (price) course.price = price;
-    if (whatYouWillLearn) course.whatYouWillLearn = whatYouWillLearn;
-    if (tag) course.tag = tag;
-
-    if (req.files && req.files.thumbnail) {
+    if (req.files?.thumbnail) {
       const uploaded = await uploadFileToCloudinary(
         req.files.thumbnail,
         process.env.FOLDER_NAME
@@ -170,37 +99,64 @@ export const updateCourse = async (req, res) => {
 
     await course.save();
 
-    return res.status(200).json({
-      success: true,
-      message: "Course updated successfully",
-      data: course,
-    });
+    res.json({ success: true, data: course });
 
   } catch (error) {
-    return res.status(500).json({
-      success: false,
-      message: error.message,
-    });
+    res.status(500).json({ success: false, message: error.message });
   }
 };
-
 
 // ✅ DELETE COURSE
 export const deleteCourse = async (req, res) => {
   try {
-    const courseId = req.params.id;
+    await Course.findByIdAndDelete(req.params.id);
 
-    await Course.findByIdAndDelete(courseId);
-
-    return res.status(200).json({
-      success: true,
-      message: "Course deleted successfully",
-    });
+    res.json({ success: true, message: "Course deleted" });
 
   } catch (error) {
-    return res.status(500).json({
-      success: false,
-      message: error.message,
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+// ✅ GET INSTRUCTOR COURSES (🔥 MAIN FIX)
+export const getInstructorCourses = async (req, res) => {
+  try {
+    const courses = await Course.find({ instructor: req.user.id })
+      .populate("instructor");
+
+    res.json({ success: true, data: courses });
+
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+// ✅ PURCHASE COURSE
+export const purchaseCourse = async (req, res) => {
+  try {
+    const { courseId } = req.body;
+    const userId = req.user.id;
+
+    const course = await Course.findById(courseId);
+
+    if (!course) {
+      return res.status(404).json({ success: false });
+    }
+
+    if (course.studentsEnrolled.includes(userId)) {
+      return res.status(400).json({ success: false, message: "Already purchased" });
+    }
+
+    course.studentsEnrolled.push(userId);
+    await course.save();
+
+    await User.findByIdAndUpdate(userId, {
+      $push: { purchasedCourses: courseId },
     });
+
+    res.json({ success: true, message: "Purchased successfully" });
+
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
   }
 };

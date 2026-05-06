@@ -1,17 +1,32 @@
 import mongoose from "mongoose";
 
-const courseProgressSchema = new mongoose.Schema({
-
-    courseID:{
-        type:mongoose.Schema.Types.ObjectId,
-        ref:"Course"
-    },
-    completedVideos:{
-        type:mongoose.Schema.Types.ObjectId,
-        ref:"SubSection"
+const courseProgressSchema = new mongoose.Schema(
+  {
+    userId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
     },
 
-})
+    courseId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Course",
+      required: true,
+    },
 
-const CourseProgress = mongoose.model("CourseProgress",courseProgressSchema)
-export default CourseProgress
+    completedVideos: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "SubSection",
+      }
+    ],
+
+    progressPercentage: {
+      type: Number,
+      default: 0,
+    },
+  },
+  { timestamps: true }
+);
+
+export default mongoose.model("CourseProgress", courseProgressSchema);
