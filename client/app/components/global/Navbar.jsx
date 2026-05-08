@@ -13,10 +13,10 @@ const Navbar = () => {
   const pathname = usePathname();
 
   const navLink = (path) =>
-    `px-4 py-2 rounded-lg transition ${
+    `px-4 py-2 transition ${
       pathname === path
-        ? "bg-white/20 text-white"
-        : "text-white/80 hover:bg-white/10"
+        ? "border-b text-[#F13E93]"
+        : "text-white/80 hover:text-[#F13E93]"
     }`;
 
   return (
@@ -24,22 +24,25 @@ const Navbar = () => {
       <div className="max-w-7xl mx-auto px-6 py-3 flex justify-between items-center">
         
         {/* Logo */}
-        <Link href="/" className="text-xl font-bold text-white">
-          EdTech
+        <Link href="/" className="text-xl font-bold text-[#F13E93]">
+          Lumina Premiere
         </Link>
 
         {/* Desktop Menu */}
         <div className="hidden md:flex items-center gap-4">
           <Link href="/" className={navLink("/")}>
-            Home
-          </Link>
-
-          <Link href="/courses" className={navLink("/courses")}>
             Courses
           </Link>
 
+          <Link href="/courses" className={navLink("/courses")}>
+            Experience
+          </Link>
+
           <Link href="/dashboard" className={navLink("/dashboard")}>
-            Dashboard
+            Instructor
+          </Link>
+          <Link href="/dashboard" className={navLink("/dashboard")}>
+            Pricing
           </Link>
         </div>
 
@@ -47,13 +50,13 @@ const Navbar = () => {
         <div className="hidden md:flex items-center gap-4">
           {!token ? (
             <>
-              <Link href="/login" className="text-white/80 hover:text-white">
+              <Link href="/login" className=" hover:text-white text-[#F13E93]">
                 Login
               </Link>
 
               <Link
                 href="/signup"
-                className="bg-white/20 backdrop-blur-md px-4 py-2 rounded-lg text-white hover:bg-white/30"
+                className="bg-white/20 backdrop-blur-md px-4 py-2 rounded-lg text-white hover:bg-[#F13E93]"
               >
                 Signup
               </Link>
