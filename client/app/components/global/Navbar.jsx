@@ -15,16 +15,16 @@ const Navbar = () => {
   const navLink = (path) =>
     `px-4 py-2 transition ${
       pathname === path
-        ? "border-b text-[#F13E93]"
-        : "text-white/80 hover:text-[#F13E93]"
+        ? "border-b-2 text-[#53CBF3] font-semibold"
+        : "font-semibold text-gray-600 hover:text-[#53CBF3]"
     }`;
 
   return (
-    <nav className="fixed top-0 left-0 w-full z-50 backdrop-blur-lg bg-white/10 border-b border-white/20 shadow-lg">
-      <div className="max-w-7xl mx-auto px-6 py-3 flex justify-between items-center">
+    <nav className=" fixed top-0 left-0 w-full z-50 backdrop-blur-lg bg-white/10 border-b border-white/20 shadow-lg">
+      <div className="responsivewidth mx-auto  py-3 flex justify-between items-center">
         
         {/* Logo */}
-        <Link href="/" className="text-xl font-bold text-[#F13E93]">
+        <Link href="/" className="text-xl font-bold text-[#53CBF3]">
           Lumina Premiere
         </Link>
 
@@ -50,13 +50,13 @@ const Navbar = () => {
         <div className="hidden md:flex items-center gap-4">
           {!token ? (
             <>
-              <Link href="/login" className=" hover:text-white text-[#F13E93]">
+              <Link href="/login" className=" hover:text-white text-[#53CBF3]">
                 Login
               </Link>
 
               <Link
                 href="/signup"
-                className="bg-white/20 backdrop-blur-md px-4 py-2 rounded-lg text-white hover:bg-[#F13E93]"
+                className="bg-[#53CBF3] backdrop-blur-md px-4 py-2 rounded-lg  hover:bg-[#53CBF3]"
               >
                 Signup
               </Link>
@@ -64,7 +64,7 @@ const Navbar = () => {
           ) : (
             <button
               onClick={() => dispatch(logout())}
-              className="bg-red-500/80 px-4 py-2 rounded-lg text-white hover:bg-red-600"
+              className="bg-red-500/80 px-4 py-2 rounded-lg text-black hover:bg-red-600"
             >
               Logout
             </button>
@@ -75,7 +75,7 @@ const Navbar = () => {
         <div className="md:hidden">
           <button
             onClick={() => setOpen(!open)}
-            className="text-white text-2xl"
+            className="text-black text-2xl"
           >
             ☰
           </button>
@@ -84,28 +84,31 @@ const Navbar = () => {
 
       {/* Mobile Menu */}
       {open && (
-        <div className="md:hidden bg-white/10 backdrop-blur-lg px-6 pb-4 flex flex-col gap-3">
+        <div className="md:hidden bg-white/10 backdrop-blur-lg  pb-4 flex flex-col ">
          <div className="mt-2 flex flex-col">
            <Link href="/" className={navLink("/")}>
-            Home
-          </Link>
-          <Link href="/courses" className={navLink("/courses")}>
             Courses
           </Link>
+          <Link href="/courses" className={navLink("/courses")}>
+            Experience
+          </Link>
           <Link href="/dashboard" className={navLink("/dashboard")}>
-            Dashboard
+            Instructor
+          </Link>
+          <Link href="/dashboard" className={navLink("/dashboard")}>
+            Pricing
           </Link>
          </div>
 
           {!token ? (
-            <>
-              <Link href="/login" className="text-white">
+            <div className="flex flex-col items-center justify-center gap-4">
+              <Link href="/login" className="text-black bg-[#53CBF3] p-3">
                 Login
               </Link>
-              <Link href="/signup" className="text-white">
+              <Link href="/signup" className="text-black bg-[#53CBF3] p-3">
                 Signup
               </Link>
-            </>
+            </div>
           ) : (
             <button
               onClick={() => dispatch(logout())}

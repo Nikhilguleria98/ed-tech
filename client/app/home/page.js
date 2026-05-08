@@ -6,7 +6,7 @@ import InstructorSection from '../components/home/InstructorSection'
 
 const Home = () => {
 
-  const heroData = [
+  const heroData = 
     {
       subHead:"The Digital Ivy League of Tech",
       mainHead:"Elite Technical Mentorship for the",
@@ -17,7 +17,7 @@ const Home = () => {
       img:"/hero.png"
 
     }
-  ]
+  
 
 
   return (

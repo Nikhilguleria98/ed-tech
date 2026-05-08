@@ -1,60 +1,29 @@
-// const HeroSection = () => {
-//   return (
-//     <div className="relative h-screen w-full flex items-center justify-center text-white">
 
-//       {/* Background Image */}
-//       <img
-//         src="coding bg2.jpg"
-//         alt="hero"
-//         className="absolute inset-0 w-full h-full object-cover"
-//       />
-
-//       {/* Dark Overlay */}
-//       <div className="absolute inset-0 bg-black/80 "></div>
-
-//       {/* Content */}
-//       <div className="relative z-10 text-center max-w-3xl px-6">
-
-//         {/* Top Button */}
-//         <button className="mb-6 px-5 py-2 rounded-full bg-white/10 border border-white/20 backdrop-blur-md hover:bg-white/20 transition">
-//           Become an Instructor →
-//         </button>
-
-//         {/* Heading */}
-//         <h1 className="text-4xl md:text-6xl font-bold leading-tight">
-//           Empower Your Future with{" "}
-//           <span className="text-cyan-400">Coding Skills</span>
-//         </h1>
-
-//         {/* Description */}
-//         <p className="mt-6 text-gray-300 text-lg">
-//           Learn at your own pace from anywhere with hands-on projects,
-//           quizzes, and expert guidance.
-//         </p>
-
-//         {/* Buttons */}
-//         <div className="mt-8 flex justify-center gap-4">
-//           <button className="bg-yellow-400 text-black px-6 py-3 rounded-lg font-semibold hover:bg-yellow-300 transition">
-//             Learn More
-//           </button>
-//           <button className="bg-white/10 border border-white/20 px-6 py-3 rounded-lg backdrop-blur-md hover:bg-white/20 transition">
-//             Book a Demo
-//           </button>
-//         </div>
-//       </div>
-//     </div>
-//   );
-// };
-
-// export default HeroSection;
 
 
 import React from 'react'
 
 const Hero = ({heroData}) => {
   return (
-    <div>
+    <div className='bg-[#F7F9FB] '>
+    <div className='responsivewidth py-20 md:py-32 '>
+      <div className='flex flex-col lg:flex-row gap-10 '>
+        {/* left */}
+        <div className='  w-full lg:w-1/2'>
+        <h2 className='py-2 px-4 border-2 bg-[#d9f1f8] inline-block border-[#53CBF3] text-[#53CBF3] rounded-full'>{heroData.subHead}</h2>
+        <h1 className='text-4xl sm:text-5xl md:text-6xl font-bold mt-4'>{heroData.mainHead}</h1>
+        <h3 className='text-4xl sm:text-5xl md:text-6xl font-bold text-[#53CBF3]'>{heroData.mainHead2}</h3>
+        <p className='mt-4 text-gray-600 text-xl'>{heroData.para}</p>
+      </div>
+
+      {/* right */}
+     <div className='w-full lg:w-1/2 flex justify-center '>
+  <img src={heroData.img} alt="" className='w-full object-contain max-w-[500px]'/>
+</div>
+      </div>
       
+    </div>
+
     </div>
   )
 }
