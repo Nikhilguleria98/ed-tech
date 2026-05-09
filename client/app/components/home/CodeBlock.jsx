@@ -86,7 +86,7 @@ const CourseSection = () => {
   const [activeTab, setActiveTab] = useState("free");
 
   return (
-    <div className="bg-[#020617] text-white py-16 px-4">
+    <div className="bg-zinc-900 text-white py-16 px-4">
       <div className="max-w-6xl mx-auto text-center">
 
         {/* Heading */}
@@ -119,7 +119,7 @@ const CourseSection = () => {
           {coursesData[activeTab].map((course, index) => (
             <div
               key={index}
-              className="bg-[#0f172a] p-6 rounded-xl border border-white/10 hover:scale-105 transition"
+              className="bg-zinc-950 p-6 rounded-xl border border-white/10 hover:scale-105 transition"
             >
               <h3 className="text-xl font-semibold">{course.title}</h3>
               <p className="text-gray-400 mt-3">{course.desc}</p>
