@@ -1,6 +1,6 @@
 const InstructorSection = () => {
   return (
-    <div className="bg-[#020617] text-white py-20 px-6">
+    <div className="bg-zinc-800 text-white py-20 px-6">
       <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-12 items-center">
 
         {/* LEFT - IMAGE WITH EFFECT */}
@@ -35,7 +35,7 @@ const InstructorSection = () => {
 
         {/* RIGHT - CONTENT */}
         <div>
-          <h2 className="text-3xl md:text-5xl font-bold leading-tight">
+          <h2 className="text-3xl md:text-5xl font-extrabold leading-tight">
             Turn Your Knowledge Into{" "}
             <span className="bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent">
               Income
