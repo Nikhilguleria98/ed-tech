@@ -30,7 +30,7 @@ const SkillsSection = () => {
 
         {/* LEFT CONTENT */}
         <div>
-          <h2 className="text-3xl md:text-5xl font-bold text-gray-900 leading-tight">
+          <h2 className="text-3xl md:text-5xl font-extrabold text-gray-900 leading-tight">
             Build Skills That Actually{" "}
             <span className="text-cyan-500">Pay Off</span>
           </h2>
