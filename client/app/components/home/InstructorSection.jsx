@@ -7,7 +7,7 @@ const InstructorSection = () => {
         <div className="relative flex justify-center">
 
           {/* Glow Background */}
-          <div className="absolute w-[300px] h-[300px] bg-cyan-500/20 blur-3xl rounded-full"></div>
+          <div className="absolute w-75 h-75 bg-cyan-500/20 blur-3xl rounded-full"></div>
 
           <img
             src="teacher2.png"
@@ -37,7 +37,7 @@ const InstructorSection = () => {
         <div>
           <h2 className="text-3xl md:text-5xl font-extrabold leading-tight">
             Turn Your Knowledge Into{" "}
-            <span className="bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent">
+            <span className="bg-linear-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent">
               Income
             </span>
           </h2>
